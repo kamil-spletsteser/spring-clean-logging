@@ -1,10 +1,17 @@
 scl:
   logs:
-    - reference: 'pl.k4mil.springeasylogging.TestBean.run'
+    - reference: 'pl.k4mil.springeasylogging.TestObjectService.copyId'
       level: error
-      type: before
+      type: after
       message: 'Firstname of first person is {} and lastname of second person id {}, id of returned person is {}'
       paths:
         - args[0].firstName
         - args[1].lastName
         - retVal.id
+    - reference: 'pl.k4mil.springeasylogging.TestObjectService.copyId'
+      level: info
+      type: before
+      message: 'Firstname of first person is {} and lastname of second person id {}, id of returned person is {}'
+      paths:
+        - args[0].firstName
+        - args[1].lastName

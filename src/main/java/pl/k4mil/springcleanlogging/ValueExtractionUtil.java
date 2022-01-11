@@ -62,7 +62,7 @@ public class ValueExtractionUtil {
             }
             return next.toString();
         }
-        return null;
+        return root.toString();
     }
 
     private Object getFieldValue(String fieldName, Object source) throws NoSuchFieldException, IllegalAccessException {

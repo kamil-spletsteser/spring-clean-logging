@@ -31,7 +31,7 @@ public class AdvisorBeanRegisterer implements BeanDefinitionRegistryPostProcesso
     private void registerAdvisorBean(BeanDefinitionRegistry registry, LogSpecs logSpecs) {
         registry
             .registerBeanDefinition(
-                "loggingAdvisor-" + UUID.randomUUID(),
+                "loggingAdvisor-" + (logSpecs.getId() != null ? logSpecs.getId() : UUID.randomUUID().toString()),
                     BeanDefinitionBuilder
                         .genericBeanDefinition(
                             Advisor.class,

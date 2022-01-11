@@ -4,17 +4,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import pl.k4mil.springcleanlogging.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -41,8 +39,6 @@ class AutoconfigurationTest {
 	@Autowired
 	ApplicationContext context;
 
-	final String logTemplate = "Firstname of first person is %s and lastname of second person id %s, id of returned person is %s";
-
 	@DisplayName("Checking number of registered logger beans")
 	@Test
 	void test1() {
@@ -53,38 +49,33 @@ class AutoconfigurationTest {
 		assertThat(registeredAdvisorsNumber).isEqualTo(2);
 	}
 
-//	@DisplayName("Checking properties of created advisors")
-//	@Test
-//	void test2() {
-//		Set<String> advisorBeanNames = Arrays
-//				.stream(context.getBeanDefinitionNames())
-//				.filter(b -> b.contains("loggingAdvisor-"))
-//				.collect(Collectors.toSet());
-//
-//		List<Advisor> advisors = new ArrayList<>();
-//		advisorBeanNames.forEach(beanName -> {
-//			Advisor advisor = context.getBean(beanName, Advisor.class);
-//
-//			if(advisor instanceof AfterExecutionLogger) {
-//
-//			}
-//			else if(advisor instanceof BeforeExecutionLogger) {
-//
-//			}
-//			else {
-//				fail("")
-//			}
-//		});
-//	}
+	@DisplayName("Checking properties of created advices (loggers)")
+	@Test
+	void test2() {
+		Set<String> advisorBeanNames = Arrays
+				.stream(context.getBeanDefinitionNames())
+				.filter(b -> b.contains("loggingAdvisor-"))
+				.collect(Collectors.toSet());
 
-//	Person p1 = testObjectService.create();
-//	Person p2 = testObjectService.create();
-//		testObjectService.copyId(p1, p2);
-//
-//	String message = String.format(logTemplate, p1.getFirstName(), p2.getFirstName(), p1.getId());
-//
-//	//		assertThat(logTrackerStub.contains(message))
-////				.as("Checking if specific message was logged").isTrue();
-//	assertThat(logTrackerStub.size())
-//			.as("Checking number of logged messages").isEqualTo(1);
+		advisorBeanNames.forEach(beanName -> {
+			Advisor advisor = context.getBean(beanName, Advisor.class);
+			AspectJExpressionPointcut pointcut = (AspectJExpressionPointcut) ((DefaultPointcutAdvisor) advisor).getPointcut();
+
+			assertThat(pointcut.getExpression())
+					.as("Checking method reference")
+					.isEqualTo("execution(* pl.k4mil.springeasylogging.TestObjectService.copyId(..))");
+
+			String id = beanName.split("-")[1];
+
+			if(id.equals("1")) {
+				assertThat(advisor.getAdvice()).isInstanceOf(AfterExecutionLogger.class);
+			}
+			else if(id.equals("2")) {
+				assertThat(advisor.getAdvice()).isInstanceOf(BeforeExecutionLogger.class);
+			}
+			else {
+				fail("Advisor bean retrieved from context has incorrect type");
+			}
+		});
+	}
 }

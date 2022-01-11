@@ -39,7 +39,7 @@ public abstract class AbstractExecutionLogger {
                     break;
             }
         } catch (Exception e) {
-            logger.warn("Logging message omitted due to error while extracting values: {}", e.getLocalizedMessage());
+            logger.warn("Logging message omitted due to error while extracting values, reason: {}", e.getLocalizedMessage());
         }
     }
 }

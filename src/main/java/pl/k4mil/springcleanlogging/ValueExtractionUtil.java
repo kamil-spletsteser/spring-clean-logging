@@ -1,7 +1,5 @@
 package pl.k4mil.springcleanlogging;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,8 +8,6 @@ import java.util.List;
 public class ValueExtractionUtil {
 
     private final String argsRegex = "^args\\[([0-9]|[1-9][0-9]|[1-9][0-9][0-9])\\]$";
-
-    private final Logger logger = LoggerFactory.getLogger(ValueExtractionUtil.class);
 
     public List<String> extractValues(List<String> paths, Object[] args, Object retVal) throws NoSuchFieldException, IllegalAccessException {
         List<String> values = new ArrayList<>();
@@ -66,7 +62,7 @@ public class ValueExtractionUtil {
             }
             return next.toString();
         }
-        return null;
+        return root.toString();
     }
 
     private Object getFieldValue(String fieldName, Object source) throws NoSuchFieldException, IllegalAccessException {

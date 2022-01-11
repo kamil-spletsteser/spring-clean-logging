@@ -4,11 +4,20 @@ import java.util.List;
 
 public class LogSpecs {
 
+    private String id;
     private String message;
     private String reference;
     private Level level;
     private Type type;
     private List<String> paths;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getMessage() {
         return message;

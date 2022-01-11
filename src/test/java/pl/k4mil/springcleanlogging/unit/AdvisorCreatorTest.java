@@ -1,6 +1,5 @@
 package pl.k4mil.springcleanlogging.unit;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -11,36 +10,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Unit tests for AdvisorCreator class")
 class AdvisorCreatorTest {
 
-    final String methodReference = "pl.k4mil.springcleanlogging.TestBean.run";
-    final String pointcutExpression = "execution(* pl.k4mil.springcleanlogging.TestBean.run(..))";
+    final String methodReference = "pl.k4mil.springcleanlogging.TestObjectService.copyId";
+    final String pointcutExpression = "execution(* pl.k4mil.springcleanlogging.TestObjectService.copyId(..))";
     AdvisorCreator advisorCreator = new AdvisorCreator();
-    DefaultPointcutAdvisor advisor;
-    AspectJExpressionPointcut pointcut;
+    TestObjectService testObjectService = new TestObjectService();
 
-    @BeforeEach
-    void setUp() {
-        advisor = (DefaultPointcutAdvisor) advisorCreator.createAdvisor(create());
-        pointcut = (AspectJExpressionPointcut) advisor.getPointcut();
-    }
-
-    @DisplayName("Checking advice type")
+    @DisplayName("Checking properties of created instance, advice type should be BeforeExecutionLogger")
     @Test
     void test1() {
+        LogSpecs logSpecs = testObjectService.create("");
+        logSpecs.setReference(methodReference);
+        logSpecs.setType(Type.BEFORE);
+
+        DefaultPointcutAdvisor advisor = (DefaultPointcutAdvisor) advisorCreator.createAdvisor(logSpecs);
+        assertThat(advisor.getAdvice()).isInstanceOf(BeforeExecutionLogger.class);
+        AspectJExpressionPointcut pointcut = (AspectJExpressionPointcut) advisor.getPointcut();
         assertThat(pointcut.getExpression()).isEqualTo(pointcutExpression);
     }
 
-    @DisplayName("Checking pointcut expression")
+    @DisplayName("Checking properties of created instance, advice type should be AfterExecutionLogger")
     @Test
     void test2() {
-        assertThat(pointcut.getExpression()).isEqualTo(pointcutExpression);
-    }
-
-    private LogSpecs create() {
-        LogSpecs logSpecs = new LogSpecs();
-        logSpecs.setLevel(Level.INFO);
-        logSpecs.setType(Type.BEFORE);
-        logSpecs.setMessage("message");
+        LogSpecs logSpecs = testObjectService.create("");
         logSpecs.setReference(methodReference);
-        return logSpecs;
+        logSpecs.setType(Type.AFTER);
+
+        DefaultPointcutAdvisor advisor = (DefaultPointcutAdvisor) advisorCreator.createAdvisor(logSpecs);
+        assertThat(advisor.getAdvice()).isInstanceOf(AfterExecutionLogger.class);
+        AspectJExpressionPointcut pointcut = (AspectJExpressionPointcut) advisor.getPointcut();
+        assertThat(pointcut.getExpression()).isEqualTo(pointcutExpression);
     }
 }

@@ -4,12 +4,15 @@
 
 ### ⚽️ The goal of SCL
 
+SCL is Spring Framework based module providing the ability to configure logs in `.properties` file 
+
+
 ### 🚀 Getting started
 
-Currently, there is no artifact published to public repository, 
-instead script `mvn-install-locally.sh` can be used to install in local maven repository.
+#### Setting up dependency in `pom.xml`
 
-#### `pom.xmn`
+Currently, there is no artifact published to public repository,
+instead script `mvn-install-locally.sh` can be used to install in local maven repository.
 
 ```xml
 <dependency>
@@ -19,12 +22,16 @@ instead script `mvn-install-locally.sh` can be used to install in local maven re
 </dependency>
 ```
 
-#### `application.properties`
+#### Defining logs
+
+Log attributes:
+</br></br>
+`level` - Log level
+
 ```yaml
 scl:
   logs:
-    - id: 1
-      reference: 'pl.k4mil.usageexample.TestBean.createAddress'
+    - reference: 'pl.k4mil.usageexample.TestBean.createAddress'
       level: warn
       type: before
       message: 'Creating new address - street: {}, city: {}'
@@ -32,8 +39,7 @@ scl:
         - args[0]
         - args[1]
 
-    - id: 2
-      reference: 'pl.k4mil.usageexample.TestBean.createPersonWithAddress'
+    - reference: 'pl.k4mil.usageexample.TestBean.createPersonWithAddress'
       level: error
       type: after
       message: 'New person created - city: {}, firstName: {}, lastName: {}, id: {}'
@@ -43,16 +49,15 @@ scl:
         - args[1]
         - retVal.id
 
-    - id: 3
-      reference: 'pl.k4mil.usageexample.TestBean.createPerson'
+    - reference: 'pl.k4mil.usageexample.TestBean.createPerson'
       level: info
       type: after
       message: 'New person created - toString(): {}'
       paths:
-        - retVal.
+        - retVal
 ```
 
-#### Code
+#### Java
 
 Just place annotation `@EnableSCL` on main class or any class annotated with `@Configuration`
 
@@ -70,6 +75,12 @@ public class UsageExampleApplication {
 #### Demo app
 
 ### 🗺 Roadmap
+
+❌ Check compatibility with older versions of Spring Boot (currently tested on 2.6.1 only)
+</br>
+❌ Publish artifact to public repositories
+</br>
+
 
 ### 💼 License
 

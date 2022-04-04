@@ -25,7 +25,7 @@ instead script `mvn-install-locally.sh` can be used to install in local maven re
 #### Defining logs
 
 Log attributes:
-</br></br>
+
 `level` - Log level
 
 ```yaml
@@ -74,14 +74,20 @@ public class UsageExampleApplication {
 
 #### Demo app
 
+In `example` directory, there is a project showing few examples of SCL-based logs.
+
 ### 🗺 Roadmap
 
 ❌ Check compatibility with older versions of Spring Boot (currently tested on 2.6.1 only)
-</br>
-❌ Publish artifact to public repositories
-</br>
 
+❌ Publish artifact to public repositories (Maven central etc.)
+
+❌ More developer-friendly configuration validation 
 
 ### 💼 License
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ### 📧 Contact
+
+#### k4mil-github@protonmail.com
